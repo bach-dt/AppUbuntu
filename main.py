@@ -93,6 +93,11 @@ class BrokenF(BrokenFrame.Ui_Dialog):
     def setupUi(self, Dialog):
         super().setupUi(Dialog)
         # Appear position
+        size = Dialog.size()
+        desktopSize = QDesktopWidget().screenGeometry()
+        top = int((desktopSize.height() / 2) - (size.height() / 2))
+        left = int((desktopSize.width() / 2) - (size.width() / 2))
+        Dialog.move(left, top)
 
         self.done.setVisible(False)
 
@@ -135,7 +140,11 @@ class ReturnF(ReturnFrame.Ui_Dialog):
     def setupUi(self, Dialog):
         super().setupUi(Dialog)
         # Appear position
-
+        size = Dialog.size()
+        desktopSize = QDesktopWidget().screenGeometry()
+        top = int((desktopSize.height() / 2) - (size.height() / 2))
+        left = int((desktopSize.width() / 2) - (size.width() / 2))
+        Dialog.move(left, top)
         # Setup date
         today = VieDate[datetime.datetime.now().strftime("%A")]
         date = datetime.datetime.now().strftime(today + ", ngày %d tháng %m")
@@ -171,7 +180,11 @@ class BorrowF(BorrowFrame.Ui_Dialog):
     def setupUi(self, Dialog):
         super().setupUi(Dialog)
         # Appear position
-
+        size = Dialog.size()
+        desktopSize = QDesktopWidget().screenGeometry()
+        top = int((desktopSize.height() / 2) - (size.height() / 2))
+        left = int((desktopSize.width() / 2) - (size.width() / 2))
+        Dialog.move(left, top)
         # Setup date
         today = VieDate[datetime.datetime.now().strftime("%A")]
         date = datetime.datetime.now().strftime(today + ", ngày %d tháng %m")
@@ -342,6 +355,11 @@ class MainF(MainFrame.Ui_MainWindow):
         self.label.setMovie(GIF)
         GIF.start()
         # Appear position
+        size = MainWindow.size()
+        desktopSize = QDesktopWidget().screenGeometry()
+        top = int((desktopSize.height() / 2) - (540 / 2))
+        left = int((desktopSize.width() / 2) - (800 / 2))
+        MainWindow.move(left, top)
 
         # window = QMainWindow()
         # self.setupUi(window)
