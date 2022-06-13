@@ -365,7 +365,6 @@ class MainF(MainFrame.Ui_MainWindow):
         # self.setupUi(window)
         # # window.showFullScreen()
         # window.show()
-        self.pushButton.clicked.connect(QMainWindow.close)
 
         # timeThread
         # self.timeThread.start()  # -----------------------------------------------------------------------------------
@@ -903,6 +902,7 @@ def main():
     ui.setupUi(window)
     # window.showFullScreen()
     window.showFullScreen()
+    ui.pushButton.clicked.connect(window.close)
     sys.exit(app.exec_())
 
 
