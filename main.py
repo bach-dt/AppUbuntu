@@ -40,7 +40,7 @@ period = [["00-00", "06-45"],
           ["16-45", "17-30"],
           ["17-45", "18-30"],
           ["18-30", "19-15"],
-          ["19-30", "23-00"]]
+          ["19-30", "23-30"]]
 
 translateDate = {"Thứ hai": "Monday",
                  "Thứ ba": "Tuesday",
@@ -79,7 +79,7 @@ class SerialThread(QtCore.QThread):
     def run(self):
         while True:
             try:
-                ser = Serial(port='/dev/ttyUSB0', baudrate=115200)
+                ser = Serial(port='/dev/ttyACM0', baudrate=115200)
                 rfid = str(ser.readline())
                 if rfid != "b''":
                     rfid = rfid.split(":  ")[1].split("\\")[0]
@@ -400,6 +400,8 @@ class MainF(MainFrame.Ui_MainWindow):
                 self.RFID = rfid
                 self.Last = db.collection("History").document(self.mail) \
                     .collection("EquipmentState").document("Last").get().to_dict()
+                self.Lastday = db.collection("History").document(self.mail) \
+                    .collection("EquipmentState").document(self.Last["LastCheck"]).get().to_dict()
                 print(str(self.Last))
                 if self.Last["LastState"] == "Borrowed":
                     self.setupRdialog()
@@ -466,19 +468,18 @@ class MainF(MainFrame.Ui_MainWindow):
                             self.BorrowFr.refirm.setText(self.BorrowFr.note)
 
                     if self.numberR == 1 and self.numberBroken == 0:
-                        if deviceID[:3] == self.Last["Last_Room"]:
-                            if deviceID[3] == "1" and self.ReturnFr.remote == 1:
-                                self.ReturnFr.remote_room.setText(deviceID[:3])
-                                self.ReturnFr.remote_cb.setChecked(True)
-                            if deviceID[3] == "2" and self.ReturnFr.hdmi == 1:
-                                self.ReturnFr.hdmi_room.setText(deviceID[:3])
-                                self.ReturnFr.hdmi_cb.setChecked(True)
-                            if deviceID[3] == "3" and self.ReturnFr.laser == 1:
-                                self.ReturnFr.laser_room.setText(deviceID[:3])
-                                self.ReturnFr.laser_cb.setChecked(True)
-                            if deviceID[3] == "4" and self.ReturnFr.micro == 1:
-                                self.ReturnFr.micro_room.setText(deviceID[:3])
-                                self.ReturnFr.micro_cb.setChecked(True)
+                        if deviceID[3] == "1" and deviceID[:3] == self.Lastday["ac_remote"]:
+                            self.ReturnFr.remote_room.setText(deviceID[:3])
+                            self.ReturnFr.remote_cb.setChecked(True)
+                        if deviceID[3] == "2" and deviceID[:3] == self.Lastday["hdmi_wire"]:
+                            self.ReturnFr.hdmi_room.setText(deviceID[:3])
+                            self.ReturnFr.hdmi_cb.setChecked(True)
+                        if deviceID[3] == "3" and deviceID[:3] == self.Lastday["laser_pen"]:
+                            self.ReturnFr.laser_room.setText(deviceID[:3])
+                            self.ReturnFr.laser_cb.setChecked(True)
+                        if deviceID[3] == "4" and deviceID[:3] == self.Lastday["mcr_phone"]:
+                            self.ReturnFr.micro_room.setText(deviceID[:3])
+                            self.ReturnFr.micro_cb.setChecked(True)
                     if self.numberBroken == 1:
                         if deviceID[3] == "1":
                             self.BrokenFr.del_remote.setEnabled(True)
@@ -583,7 +584,7 @@ class MainF(MainFrame.Ui_MainWindow):
         self.ReturnFr.remainTime.setMovie(GIF_)
         GIF_.start()
         # self.ReturnDialog.showFullScreen()
-        self.ReturnDialog.showFullScreen()
+        self.ReturnDialog.show()
         self.timeShow = datetime.datetime.now().strftime("%M-%S")
         QtCore.QTimer.singleShot(29500, self.closeDialog)
         self.numberR = 1
@@ -667,7 +668,7 @@ class MainF(MainFrame.Ui_MainWindow):
         self.BorrowFr.remainTime.setMovie(GIF_)
         GIF_.start()
         # self.BorrowDialog.showFullScreen()
-        self.BorrowDialog.showFullScreen()
+        self.BorrowDialog.show()
         self.timeShow = datetime.datetime.now().strftime("%M-%S")
         QtCore.QTimer.singleShot(29500, self.closeDialog)
         self.numberB = 1
@@ -799,7 +800,7 @@ class MainF(MainFrame.Ui_MainWindow):
             self.BorrowDialog.setGraphicsEffect(blur)
         if self.numberR == 1:
             self.ReturnDialog.setGraphicsEffect(blur)
-        self.BrokenDialog.showFullScreen()
+        self.BrokenDialog.show()
         self.numberBroken = 1
 
     def Report(self):
@@ -901,7 +902,7 @@ def main():
     ui = MainF()
     ui.setupUi(window)
     # window.showFullScreen()
-    window.showFullScreen()
+    window.show()
     ui.pushButton.clicked.connect(window.close)
     sys.exit(app.exec_())
 
