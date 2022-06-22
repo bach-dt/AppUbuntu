@@ -79,7 +79,7 @@ class SerialThread(QtCore.QThread):
     def run(self):
         while True:
             try:
-                ser = Serial(port='/dev/ttyACM0', baudrate=115200)
+                ser = Serial(port='/dev/ttyUSB0', baudrate=115200)
                 rfid = str(ser.readline())
                 if rfid != "b''":
                     rfid = rfid.split(":  ")[1].split("\\")[0]
@@ -361,11 +361,6 @@ class MainF(MainFrame.Ui_MainWindow):
         left = int((desktopSize.width() / 2) - (800 / 2))
         MainWindow.move(left, top)
 
-        # window = QMainWindow()
-        # self.setupUi(window)
-        # # window.showFullScreen()
-        # window.show()
-
         # timeThread
         # self.timeThread.start()  # -----------------------------------------------------------------------------------
         today = VieDate[datetime.datetime.now().strftime("%A")]
@@ -584,7 +579,7 @@ class MainF(MainFrame.Ui_MainWindow):
         self.ReturnFr.remainTime.setMovie(GIF_)
         GIF_.start()
         # self.ReturnDialog.showFullScreen()
-        self.ReturnDialog.show()
+        self.ReturnDialog.showFullScreen()
         self.timeShow = datetime.datetime.now().strftime("%M-%S")
         QtCore.QTimer.singleShot(29500, self.closeDialog)
         self.numberR = 1
@@ -668,7 +663,7 @@ class MainF(MainFrame.Ui_MainWindow):
         self.BorrowFr.remainTime.setMovie(GIF_)
         GIF_.start()
         # self.BorrowDialog.showFullScreen()
-        self.BorrowDialog.show()
+        self.BorrowDialog.showFullScreen()
         self.timeShow = datetime.datetime.now().strftime("%M-%S")
         QtCore.QTimer.singleShot(29500, self.closeDialog)
         self.numberB = 1
@@ -800,7 +795,7 @@ class MainF(MainFrame.Ui_MainWindow):
             self.BorrowDialog.setGraphicsEffect(blur)
         if self.numberR == 1:
             self.ReturnDialog.setGraphicsEffect(blur)
-        self.BrokenDialog.show()
+        self.BrokenDialog.showFullScreen()
         self.numberBroken = 1
 
     def Report(self):
@@ -840,8 +835,12 @@ class MainF(MainFrame.Ui_MainWindow):
         if self.numberR == 1:
             self.ReturnDialog.setGraphicsEffect(blur)
         self.BrokenDialog.close()
+        self.BorrowDialog.close()
+        self.ReturnDialog.close()
         self.numberBroken = 0
-        self.resetRemainTime()
+        self.numberB = 0
+        self.numberR = 0
+        # self.resetRemainTime()
 
     def resetRemainTime(self):
         QtCore.QTimer.singleShot(29000, self.closeDialog)
@@ -902,7 +901,7 @@ def main():
     ui = MainF()
     ui.setupUi(window)
     # window.showFullScreen()
-    window.show()
+    window.showFullScreen()
     ui.pushButton.clicked.connect(window.close)
     sys.exit(app.exec_())
 
