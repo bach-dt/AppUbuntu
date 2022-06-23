@@ -902,7 +902,6 @@ def main():
     ui.setupUi(window)
     # window.showFullScreen()
     window.showFullScreen()
-    ui.pushButton.clicked.connect(window.close)
     sys.exit(app.exec_())
 
 
